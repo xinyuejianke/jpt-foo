@@ -7,9 +7,9 @@
       </div>
       <!-- 表格 -->
       <el-table :data="members" v-loading="loading">
-        <el-table-column type="index" :index="indexMethod" label="序号" width="100"></el-table-column>
+        <el-table-column prop="id" label="ID" width="100"></el-table-column>
         <el-table-column prop="nickname" label="昵称"></el-table-column>
-        <el-table-column prop="gender" label="性别"></el-table-column>
+        <el-table-column label="性别" prop="gender" :formatter="getGender"></el-table-column>
         <el-table-column prop="birthday" label="生日"></el-table-column>
         <el-table-column label="操作" fixed="right" width="275">
           <template #default="scope">
@@ -25,12 +25,18 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, reactive } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import memberModel from '../../model/member-model'
 
 export default {
+  data() {
+    return {
+      genders: { 'm': '男', 'f': '女' }
+    }
+  },
   components: {
+
   },
   setup() {
     const members = ref([])
@@ -79,8 +85,6 @@ export default {
       getAllMembers()
     }
 
-    const indexMethod = index => index + 1
-
     return {
       members,
       loading,
@@ -88,10 +92,14 @@ export default {
       editClose,
       handleEdit,
       editBookId,
-      indexMethod,
       handleDelete,
     }
   },
+  methods: {
+    getGender(prop) {
+      return this.$data.genders[prop.gender]
+    }
+  }
 }
 </script>
 
