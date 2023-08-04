@@ -13,7 +13,10 @@
               <el-input v-model="member.nickname" placeholder="请填写昵称"></el-input>
             </el-form-item>
             <el-form-item label="性别" prop="gender">
-              <el-input v-model="member.gender" placeholder="请选择性别"></el-input>
+              <el-radio-group v-model="member.gender">
+                <el-radio label="m">男</el-radio>
+                <el-radio label="f">女</el-radio>
+              </el-radio-group>
             </el-form-item>
             <el-form-item label="生日" prop="birthday">
               <el-input v-model="member.birthday" placeholder="请填成员生日（格式：yyyy-mm-dd）"></el-input>
@@ -74,6 +77,8 @@ export default {
     }
 
     const submitForm = async formName => {
+      console.log('>>>')
+      console.log(member)
       form.value.validate(async valid => {
         if (valid) {
           let res = {}
