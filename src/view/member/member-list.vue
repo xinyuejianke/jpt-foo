@@ -21,13 +21,16 @@
       </el-table>
     </div>
 
+    <!-- 编辑页面 -->
+    <member-modify v-else @editClose="editClose" :editMemberId="editMemberId"></member-modify>
   </div>
 </template>
 
 <script>
-import { onMounted, ref, reactive } from 'vue'
+import { onMounted, ref } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import memberModel from '../../model/member-model'
+import MemberModify from './member'
 
 export default {
   data() {
@@ -36,11 +39,11 @@ export default {
     }
   },
   components: {
-
+    MemberModify
   },
   setup() {
     const members = ref([])
-    const editBookId = ref(1)
+    const editMemberId = ref(1)
     const loading = ref(false)
     const showEdit = ref(false)
 
@@ -63,7 +66,7 @@ export default {
 
     const handleEdit = id => {
       showEdit.value = true
-      editBookId.value = id
+      editMemberId.value = id
     }
 
     const handleDelete = id => {
@@ -74,7 +77,7 @@ export default {
       }).then(async () => {
         const res = await memberModel.deleteMember(id)
         if (res.code < window.MAX_SUCCESS_CODE) {
-          getBooks()
+          getAllMembers()
           ElMessage.success(`${res.message}`)
         }
       })
@@ -91,7 +94,7 @@ export default {
       showEdit,
       editClose,
       handleEdit,
-      editBookId,
+      editMemberId,
       handleDelete,
     }
   },

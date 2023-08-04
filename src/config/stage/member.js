@@ -17,6 +17,15 @@ const memberRouter = {
       inNav: true,
       icon: 'iconfont icon-tushuguanli',
     },
+    {
+      title: '添加成员',
+      type: 'view',
+      name: 'member',
+      route: '/member/add',
+      filePath: 'view/member/member.vue',
+      inNav: true,
+      icon: 'iconfont icon-tushuguanli',
+    },
   ],
 }
 
