@@ -3,7 +3,7 @@ const memberRouter = {
   name: null,
   title: '成员管理',
   type: 'folder', // 类型: folder, tab, view
-  icon: 'iconfont icon-tushuguanli',
+  icon: 'iconfont icon-huiyuan1',
   filePath: 'view/member/', // 文件路径
   order: null,
   inNav: true,
@@ -15,7 +15,7 @@ const memberRouter = {
       route: '/member/list',
       filePath: 'view/member/member-list.vue',
       inNav: true,
-      icon: 'iconfont icon-tushuguanli',
+      icon: 'iconfont icon-table1',
     },
     {
       title: '添加成员',
@@ -24,7 +24,7 @@ const memberRouter = {
       route: '/member/add',
       filePath: 'view/member/member.vue',
       inNav: true,
-      icon: 'iconfont icon-tushuguanli',
+      icon: 'iconfont icon-add',
     },
   ],
 }
