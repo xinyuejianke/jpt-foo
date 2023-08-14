@@ -9,7 +9,9 @@
     </div>
     <!-- 表格 -->
     <el-table :data="tableData" v-loading="loading" @row-dblclick="rowDoubleClick">
-      <el-table-column prop="username" label="名称"></el-table-column>
+      <el-table-column prop="id" label="id"></el-table-column>
+      <el-table-column prop="username" label="用户名"></el-table-column>
+      <el-table-column prop="nickname" label="昵称"></el-table-column>
       <el-table-column prop="groupNames" label="所属分组"></el-table-column>
       <el-table-column label="操作" fixed="right" width="275">
         <template #default="scope">
@@ -20,15 +22,8 @@
     </el-table>
     <!-- 分页 -->
     <div class="pagination">
-      <el-pagination
-        :total="totalNum"
-        :background="true"
-        :page-size="pageCount"
-        v-if="refreshPagination"
-        :current-page="currentPage"
-        layout="prev, pager, next, jumper"
-        @current-change="handleCurrentChange"
-      >
+      <el-pagination :total="totalNum" :background="true" :page-size="pageCount" v-if="refreshPagination"
+        :current-page="currentPage" layout="prev, pager, next, jumper" @current-change="handleCurrentChange">
       </el-pagination>
     </div>
     <!-- 弹窗 -->
@@ -36,18 +31,9 @@
       <div style="margin-top: -25px">
         <el-tabs v-model="activeTab" @tab-click="handleClick">
           <el-tab-pane label="修改信息" name="修改信息">
-            <user-info
-              :id="id"
-              ref="info"
-              class="info"
-              pageType="edit"
-              :info="userInfo"
-              :submit="false"
-              :allGroups="allGroups"
-              labelPosition="right"
-              v-if="dialogFormVisible"
-              @handleInfoResult="handleInfoResult"
-            />
+            <user-info :id="id" ref="info" class="info" pageType="edit" :info="userInfo" :submit="false"
+              :allGroups="allGroups" labelPosition="right" v-if="dialogFormVisible"
+              @handleInfoResult="handleInfoResult" />
           </el-tab-pane>
           <el-tab-pane label="修改密码" name="修改密码">
             <user-password @handlePasswordResult="handlePasswordResult" ref="password" :id="id" class="password" />
