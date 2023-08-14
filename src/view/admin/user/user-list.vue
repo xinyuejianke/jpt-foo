@@ -85,6 +85,7 @@ export default {
     const userInfo = reactive({
       email: '',
       username: '',
+      nickname: '',
       password: '',
       groups: [],
       confirm_password: '',
@@ -98,6 +99,7 @@ export default {
       userInfo.email = row.email
       userInfo.groups = row.groups
       userInfo.username = row.username
+      userInfo.nickname = row.nickname
       dialogFormVisible.value = true
     }
 

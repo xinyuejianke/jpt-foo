@@ -1,17 +1,12 @@
 <template>
   <div class="container">
-    <el-form
-      ref="form"
-      status-icon
-      :rules="rules"
-      :model="userInfo"
-      label-width="100px"
-      v-loading="loading"
-      :label-position="labelPosition"
-      @submit.prevent
-    >
+    <el-form ref="form" status-icon :rules="rules" :model="userInfo" label-width="100px" v-loading="loading"
+      :label-position="labelPosition" @submit.prevent>
       <el-form-item label="用户名" prop="username">
         <el-input clearable v-model="userInfo.username" :disabled="isEdited"></el-input>
+      </el-form-item>
+      <el-form-item label="昵称" prop="nickname">
+        <el-input clearable v-model="userInfo.nickname"></el-input>
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
         <el-input clearable :disabled="isEdited" v-model="userInfo.email" auto-complete="new-password"></el-input>
@@ -58,7 +53,7 @@ export default {
     allGroups: {
       // 所有分组
       type: Array,
-      default: () => {},
+      default: () => { },
     },
     labelPosition: {
       // 表单label位置
@@ -68,7 +63,7 @@ export default {
     info: {
       // 用户信息
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     pageType: {
       type: String,
