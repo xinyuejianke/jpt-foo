@@ -17,6 +17,15 @@ const scheduleRouter = {
       inNav: true,
       icon: 'iconfont icon-table1',
     },
+    {
+      title: '新增排班',
+      type: 'view',
+      name: 'schedule',
+      route: '/schedules/add',
+      filePath: 'view/schedule/schedule.vue',
+      inNav: true,
+      icon: 'iconfont icon-add',
+    },
   ],
 }
 

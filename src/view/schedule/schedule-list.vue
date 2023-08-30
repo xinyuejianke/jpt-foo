@@ -9,6 +9,7 @@
       <el-table :data="schedules" v-loading="loading">
         <el-table-column prop="id" label="ID" width="50"></el-table-column>
         <el-table-column prop="user.nickname" width="100" label="职员昵称"></el-table-column>
+        <el-table-column prop="user.id" width="75" label="职员ID"></el-table-column>
         <el-table-column prop="date" width="110" label="日期"></el-table-column>
         <el-table-column prop="times" label="时间">
           <template #default="scope">

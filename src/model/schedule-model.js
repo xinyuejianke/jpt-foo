@@ -16,6 +16,10 @@ class ScheduleModel {
     return await get(`v1/schedules/${userId}/${date}`)
   }
 
+  async getSchedule(scheduleId) {
+    return await get(`v1/schedules/get/by/${scheduleId}`)
+  }
+
   async getAllScheduleOnDate(date) {
     return await get(`v1/schedules/${date}`)
   }
@@ -24,8 +28,8 @@ class ScheduleModel {
     return await get(`v1/schedules/`)
   }
 
-  async updateScheduleOnDate(date, info) {
-    return await put(`v1/schedules/${date}`, info)
+  async updateScheduleOnDate(info) {
+    return await put(`v1/schedules/`, info)
   }
 
   async deleteSchedule(userId, date) {
