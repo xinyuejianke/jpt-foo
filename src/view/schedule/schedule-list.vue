@@ -7,12 +7,12 @@
       </div>
       <!-- 表格 -->
       <el-table :data="schedules" v-loading="loading">
-        <el-table-column prop="id" label="ID" width="100"></el-table-column>
-        <el-table-column prop="user.nickname" label="职员昵称"></el-table-column>
-        <el-table-column prop="date" label="日期"></el-table-column>
-        <el-table-column prop="times" label="时间" show-overflow-tooltip>
+        <el-table-column prop="id" label="ID" width="50"></el-table-column>
+        <el-table-column prop="user.nickname" width="100" label="职员昵称"></el-table-column>
+        <el-table-column prop="date" width="110" label="日期"></el-table-column>
+        <el-table-column prop="times" label="时间">
           <template #default="scope">
-            <div>
+            <div class="tag-div">
               <div v-for="time in scope.row.times.split(',')">
                 <el-tag type="info"> {{ time }} </el-tag>
               </div>
@@ -21,7 +21,7 @@
         </el-table-column>
         <el-table-column prop="availableTimes" label="可预约时间">
           <template #default="scope">
-            <div>
+            <div class="tag-div">
               <div v-for="time in scope.row.availableTimes.split(',')">
                 <el-tag type="success"> {{ time }} </el-tag>
               </div>
@@ -134,6 +134,17 @@ export default {
     display: flex;
     justify-content: flex-end;
     margin: 20px;
+  }
+
+  .el-tag {
+    margin-left: 2px;
+    margin-bottom: 2px;
+  }
+
+  .tag-div {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
   }
 }
 </style>
