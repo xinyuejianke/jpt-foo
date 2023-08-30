@@ -10,7 +10,8 @@
         <el-col :lg="16" :md="20" :sm="24" :xs="24">
           <el-form :model="schedule" status-icon ref="form" label-width="100px" @submit.prevent :rules="rules">
             <el-form-item label="工作人员ID" prop="user_id">
-              <el-input v-model="schedule.user_id" placeholder="请填写工作人员ID"></el-input>
+              <el-input v-if="!editScheduleId" v-model="schedule.user_id" placeholder="请填写工作人员ID"></el-input>
+              <el-input v-else v-model="schedule.user.id"></el-input>
             </el-form-item>
             <el-form-item label="日期" prop="date">
               <el-input v-model="schedule.date" placeholder="请填写排班日期（格式：yyyy-mm-dd）"></el-input>
@@ -44,7 +45,7 @@ export default {
   setup(props, context) {
     const form = ref(null)
     const loading = ref(false)
-    const schedule = reactive({ userId: '', date: '', times: '' })
+    const schedule = reactive({ userId: '', date: '', times: '', user:''})
 
     const listAssign = (a, b) => Object.keys(a).forEach(key => {
       a[key] = b[key] || a[key]
@@ -65,6 +66,9 @@ export default {
       loading.value = true
       const res = await scheduleModel.getSchedule(props.editScheduleId)
       listAssign(schedule, res)
+      if (props.editScheduleId) {
+        schedule.user_id = props.editScheduleId
+      }
       loading.value = false
     }
 
@@ -80,7 +84,7 @@ export default {
         if (valid) {
           let res = {}
           if (props.editScheduleId) {
-            res = await scheduleModel.updateScheduleOnDate(schedule)
+            res = await scheduleModel.updateSchedule(props.editScheduleId, schedule)
             context.emit('editClose')
           } else {
             res = await scheduleModel.createSchedule(schedule)
