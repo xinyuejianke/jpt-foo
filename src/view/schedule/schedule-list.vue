@@ -12,12 +12,22 @@
         <el-table-column prop="date" label="日期"></el-table-column>
         <el-table-column prop="times" label="时间" show-overflow-tooltip>
           <template #default="scope">
-            <div v-for="time in scope.row.times.split(',')">
-              <el-tag type="info"> {{ time }} </el-tag>
+            <div>
+              <div v-for="time in scope.row.times.split(',')">
+                <el-tag type="info"> {{ time }} </el-tag>
+              </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="availableTimes" label="可预约时间"></el-table-column>
+        <el-table-column prop="availableTimes" label="可预约时间">
+          <template #default="scope">
+            <div>
+              <div v-for="time in scope.row.availableTimes.split(',')">
+                <el-tag type="success"> {{ time }} </el-tag>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
 
         <el-table-column label="操作" fixed="right" width="275">
           <template #default="scope">
