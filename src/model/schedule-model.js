@@ -28,12 +28,12 @@ class ScheduleModel {
     return await get(`v1/schedules/`)
   }
 
-  async updateScheduleOnDate(info) {
-    return await put(`v1/schedules/`, info)
+  async updateScheduleOnDate(scheduleId) {
+    return await put(`v1/schedules/${scheduleId}`)
   }
 
-  async deleteSchedule(userId, date) {
-    return await _delete(`v1/schedule/${userId}/${date}`)
+  async deleteSchedule(scheduleId) {
+    return await _delete(`v1/schedules/${scheduleId}`)
   }
 }
 
