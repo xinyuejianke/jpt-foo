@@ -41,7 +41,7 @@
     </div>
 
     <!-- 编辑页面 -->
-    <member-modify v-else @editClose="editClose" :editMemberId="editMemberId"></member-modify>
+    <schedule-modify v-else @editClose="editClose" :editScheduleId="editScheduleId"></schedule-modify>
   </div>
 </template>
 
@@ -49,8 +49,12 @@
 import { onMounted, ref } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import scheduleModel from '../../model/schedule-model'
+import ScheduleModify from './schedule'
 
 export default {
+  components: {
+    ScheduleModify
+  },
   setup() {
     const schedules = ref([])
     const editScheduleId = ref(1)
