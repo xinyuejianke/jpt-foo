@@ -17,6 +17,15 @@ const appointmentRouter = {
       inNav: true,
       icon: 'iconfont icon-table1',
     },
+    {
+      title: '新增预约',
+      type: 'view',
+      name: 'add-appointment',
+      route: '/appointments/add',
+      filePath: 'view/appointment/appointment.vue',
+      inNav: true,
+      icon: 'iconfont icon-add',
+    },
   ],
 }
 
