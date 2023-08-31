@@ -18,6 +18,16 @@
         <el-table-column prop="dateTime" label="时间">
           <template #default="scope">{{scope.row.dateTime.split('T')[1].substring(0,5)}}</template>
         </el-table-column>
+        <el-table-column prop="comment" label="附言">
+          <template #default="scope">
+            {{scope.row.comment === null || scope.row.comment.trim().length === 0? '暂无' : scope.row.comment}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="advice" label="备注">
+          <template #default="scope">
+            {{scope.row.advice === null || scope.row.advice.trim().length === 0? '暂无' : scope.row.advice}}
+          </template>
+        </el-table-column>
 
         <el-table-column label="操作" fixed="right" width="275">
           <template #default="scope">
