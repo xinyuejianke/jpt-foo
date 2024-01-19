@@ -6,6 +6,10 @@ import appointmentRouter from './appointment'
 
 // eslint-disable-next-line import/no-mutable-exports
 let homeRouter = [
+  scheduleRouter,
+  appointmentRouter,
+  memberRouter,
+  adminConfig,
   {
     title: '日志管理',
     type: 'view',
@@ -15,7 +19,7 @@ let homeRouter = [
     inNav: true,
     permission: ['查询所有日志'],
     icon: 'iconfont icon-iconset0103',
-    order: 1,
+    order: null,
   },
   {
     title: '个人中心',
@@ -26,10 +30,6 @@ let homeRouter = [
     inNav: false,
     icon: 'iconfont icon-rizhiguanli',
   },
-  adminConfig,
-  memberRouter,
-  scheduleRouter,
-  appointmentRouter
 ]
 
 // 处理顺序

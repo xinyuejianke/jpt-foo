@@ -3,9 +3,9 @@ const scheduleRouter = {
   name: null,
   title: '排班管理',
   type: 'folder', // 类型: folder, tab, view
-  icon: '',
+  icon: 'iconfont icon-kecheng',
   filePath: 'view/schedule', // 文件路径
-  order: null,
+  order: 1,
   inNav: true,
   children: [
     {

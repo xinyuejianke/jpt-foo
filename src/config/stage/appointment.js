@@ -3,7 +3,7 @@ const appointmentRouter = {
   name: null,
   title: '预约管理',
   type: 'folder', // 类型: folder, tab, view
-  icon: '',
+  icon: 'iconfont icon-clock',
   filePath: 'view/appointment', // 文件路径
   order: null,
   inNav: true,
