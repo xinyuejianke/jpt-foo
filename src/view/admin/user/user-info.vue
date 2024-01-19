@@ -77,6 +77,8 @@ export default {
 
     const userInfo = reactive({
       email: '',
+      nickname: '',
+      mobile: '',
       username: '',
       password: '',
       groupIds: [],
@@ -112,14 +114,16 @@ export default {
           } else {
             // 2. 更新用户信息
             const originalGroupIds = props.info.groups.map(item => item.id)
-            if (userInfo.groupIds.sort().toString() === originalGroupIds.toString()) {
+            const originalNickname = props.info.nickname
+            if (userInfo.groupIds.sort().toString() === originalGroupIds.toString() && 
+                userInfo.nickname === originalNickname) {
               ctx.emit('handleInfoResult', false)
               return
             }
 
             try {
               loading.value = true
-              res = await AdminModel.updateOneUser(userInfo.email, userInfo.groupIds, props.id)
+              res = await AdminModel.updateOneUser(userInfo, props.id)
             } catch (e) {
               loading.value = false
             }
@@ -155,6 +159,7 @@ export default {
     const setInitialUserInfo = () => {
       userInfo.email = props.info.email
       userInfo.username = props.info.username
+      userInfo.nickname = props.info.nickname
       userInfo.groupIds = props.info.groups.map(item => item.id)
     }
 

@@ -119,10 +119,11 @@ export default class Admin {
   }
 
   // eslint-disable-next-line camelcase
-  static async updateOneUser(email, group_ids, id) {
+  static async updateOneUser(userInfo, id) {
     const res = await put(`cms/admin/user/${id}`, {
-      email,
-      group_ids,
+      nickname: userInfo.nickname,
+      email:userInfo.email,
+      group_ids:userInfo.groupIds,
     })
     return res
   }
