@@ -91,9 +91,9 @@ export default {
       }).then(async () => {
         const res = await scheduleModel.deleteSchedule(id)
         if (res.code < window.MAX_SUCCESS_CODE) {
-          getAllSchedules()
           ElMessage.success(`${res.message}`)
         }
+        getAllSchedules()
       })
     }
 
