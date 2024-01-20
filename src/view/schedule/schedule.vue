@@ -10,15 +10,31 @@
         <el-col :lg="16" :md="20" :sm="24" :xs="24">
           <el-form :model="schedule" status-icon ref="form" label-width="100px" @submit.prevent :rules="rules">
             <el-form-item label="工作人员ID" prop="user_id">
-              <el-input v-if="!editScheduleId" v-model="schedule.user_id" placeholder="请填写工作人员ID"></el-input>
-              <el-input v-else v-model="schedule.user.id"></el-input>
+              <el-dropdown v-if="!editScheduleId" @command="handleCommand">
+                <el-button>
+                  {{ schedule.user_id ? `${schedule.user_id} : ${schedule.nickname}`: 'ID : 员工昵称'}}
+                  <i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item v-model="schedule.user_id" icon="el-icon-user-solid" v-for="(employee, index) in employees" :key="index" :command="employee" >
+                      {{employee.id}} : {{ employee.nickname }}
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+              <!-- 编辑模式 -->
+              <el-input v-else disabled v-model="schedule.user.id"></el-input>
             </el-form-item>
+
             <el-form-item label="日期" prop="date">
-              <el-input v-model="schedule.date" placeholder="请填写排班日期（格式：yyyy-mm-dd）"></el-input>
+              <el-input disabled v-model="schedule.date" placeholder="请填写排班日期（格式：yyyy-mm-dd）"></el-input>
             </el-form-item>
+
             <el-form-item label="时间" prop="times">
               <el-input v-model="schedule.times" placeholder="请填写排班时间（时间格式为24小时制，用英文逗号隔开。例如：13:30,14:00）"></el-input>
             </el-form-item>
+
             <el-form-item class="submit">
               <el-button type="primary" @click="submitForm">保 存</el-button>
               <el-button @click="resetForm">重 置</el-button>
@@ -34,6 +50,7 @@
 import { reactive, ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import scheduleModel from '../../model/schedule-model'
+import userModel from '../../lin/model/user'
 
 export default {
   props: {
@@ -45,7 +62,8 @@ export default {
   setup(props, context) {
     const form = ref(null)
     const loading = ref(false)
-    const schedule = reactive({ userId: '', date: '', times: '', user:''})
+    const schedule = reactive({ user_id: '', date: '', times: '', user: ''})
+    const employees = ref([])
 
     const listAssign = (a, b) => Object.keys(a).forEach(key => {
       a[key] = b[key] || a[key]
@@ -56,11 +74,21 @@ export default {
      */
     const { rules } = getRules()
 
-    onMounted(() => {
+    onMounted(async () => {
+      // load available employees info
+      try {
+        loading.value = true
+        employees.value = await userModel.getAllEmployees()
+        loading.value = false
+      } catch (err) {
+        loading.value = false
+        console.error(err.data)
+      }
       if (props.editScheduleId) {
         getSchedule()
       }
     })
+
 
     const getSchedule = async () => {
       loading.value = true
@@ -78,7 +106,6 @@ export default {
     }
 
     const submitForm = async formName => {
-      console.log('>>>')
       console.log(schedule)
       form.value.validate(async valid => {
         if (valid) {
@@ -104,6 +131,12 @@ export default {
       context.emit('editClose')
     }
 
+    const handleCommand = targetEmployee => {
+      //set schedule user to selected employee's id
+      schedule.user_id = targetEmployee.id
+      schedule.nickname = targetEmployee.nickname
+    }
+
     return {
       back,
       schedule,
@@ -111,6 +144,8 @@ export default {
       rules,
       resetForm,
       submitForm,
+      employees,
+      handleCommand,
     }
   },
 }

@@ -66,6 +66,14 @@ export default class User {
   }
 
   /**
+   * 获取所有工作人员的信息
+   */
+  static async getAllEmployees() {
+    const employees = await get('cms/user/employees')
+    return employees
+  }
+
+  /**
    * 用户修改密码
    * @param {string} newPassword 新密码
    * @param {string} confirmPassword 确认新密码

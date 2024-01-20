@@ -8,6 +8,7 @@ const Config = {
   useFrontEndErrorMsg: false, // 默认采用后端返回异常
   stagnateTime: 60 * 60 * 1000, // 无操作停滞时间，默认1小时
   baseURL: process.env.VUE_APP_BASE_URL, // API接口baseURL，在根目录.env文件查找对应环境变量配置
+  // baseURL: 'http://localhost:5123'
 }
 
 export default Config
