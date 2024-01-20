@@ -28,7 +28,9 @@
             </el-form-item>
 
             <el-form-item label="日期" prop="date">
-              <el-input disabled v-model="schedule.date" placeholder="请填写排班日期（格式：yyyy-mm-dd）"></el-input>
+              <el-input v-if="!editScheduleId" v-model="schedule.date" placeholder="请填写排班日期（格式：yyyy-mm-dd）"></el-input>
+              <!-- 编辑模式 -->
+              <el-input v-else disabled v-model="schedule.date"></el-input>
             </el-form-item>
 
             <el-form-item label="时间" prop="times">
@@ -37,7 +39,7 @@
 
             <el-form-item class="submit">
               <el-button type="primary" @click="submitForm">保 存</el-button>
-              <el-button @click="resetForm">重 置</el-button>
+              <el-button v-if="!editScheduleId" @click="resetForm">重 置</el-button>
             </el-form-item>
           </el-form>
         </el-col>
