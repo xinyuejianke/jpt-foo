@@ -77,16 +77,14 @@ export default {
     }
 
     const submitForm = async formName => {
-      console.log('>>>')
       console.log(member)
       form.value.validate(async valid => {
         if (valid) {
-          let res = {}
           if (props.editMemberId) {
-            res = await memberModel.updateMember(props.editMemberId, member)
+            await memberModel.updateMember(props.editMemberId, member)
             context.emit('editClose')
           } else {
-            res = await memberModel.createMember(member)
+            await memberModel.createMember(member)
             resetForm(formName)
           }
           ElMessage.success('操作成功')
