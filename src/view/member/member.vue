@@ -89,9 +89,7 @@ export default {
             res = await memberModel.createMember(member)
             resetForm(formName)
           }
-          if (res.code < window.MAX_SUCCESS_CODE) {
-            ElMessage.success(`${res.message}`)
-          }
+          ElMessage.success('操作成功')
         } else {
           console.error('error submit!!')
           ElMessage.error('请将信息填写完整')
