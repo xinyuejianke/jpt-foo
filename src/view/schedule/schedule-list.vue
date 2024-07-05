@@ -33,29 +33,16 @@
         <el-table-column label="操作" fixed="right" width="275">
           <template #default="scope">
             <el-button plain size="small" type="primary" @click="handleEdit(scope.row.id)">编辑</el-button>
-            <el-button
-              plain
-              size="small"
-              type="danger"
-              @click="handleDelete(scope.row.id)"
-              v-permission="{ permission: '删除排班表', type: 'disabled' }"
-              >删除</el-button
-            >
+            <el-button plain size="small" type="danger" @click="handleDelete(scope.row.id)"
+              v-permission="{ permission: '删除排班表', type: 'disabled' }">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
       <!-- 分页 -->
       <div class="pagination">
-        <el-pagination
-          :total="totalSchedules"
-          :background="true"
-          :page-size="rowsPerPage"
-          v-if="refreshPagination"
-          :current-page="currentPage"
-          layout="prev, pager, next, jumper"
-          @current-change="handlePageChange"
-        >
+        <el-pagination :total="totalSchedules" :background="true" :page-size="rowsPerPage" v-if="refreshPagination"
+          :current-page="currentPage" layout="prev, pager, next, jumper" @current-change="handlePageChange">
         </el-pagination>
       </div>
     </div>
@@ -88,19 +75,8 @@ export default {
     const currentPage = ref(1)
 
     onMounted(() => {
-      getAllSchedules()
+      getScheduleByPage()
     })
-
-    const getAllSchedules = async () => {
-      try {
-        schedules.value = await getScheduleByPage()
-      } catch (error) {
-        loading.value = false
-        if (error.code === 10020) {
-          schedules.value = []
-        }
-      }
-    }
 
     /* 翻页 */
     const handlePageChange = async val => {
@@ -119,7 +95,9 @@ export default {
         totalSchedules.value = res.totalSchedules
       } catch (e) {
         loading.value = false
-        console.error(e)
+        if (error.code === 10020) {
+          schedules.value = []
+        }
       }
     }
 
@@ -138,13 +116,13 @@ export default {
         if (res.code < window.MAX_SUCCESS_CODE) {
           ElMessage.success(`${res.message}`)
         }
-        getAllSchedules()
+        getScheduleByPage()
       })
     }
 
     const editClose = () => {
       showEdit.value = false
-      getAllSchedules()
+      getScheduleByPage()
     }
 
     return {
