@@ -33,11 +33,31 @@
         <el-table-column label="操作" fixed="right" width="275">
           <template #default="scope">
             <el-button plain size="small" type="primary" @click="handleEdit(scope.row.id)">编辑</el-button>
-            <el-button plain size="small" type="danger" @click="handleDelete(scope.row.id)"
-              v-permission="{ permission: '删除排班表', type: 'disabled' }">删除</el-button>
+            <el-button
+              plain
+              size="small"
+              type="danger"
+              @click="handleDelete(scope.row.id)"
+              v-permission="{ permission: '删除排班表', type: 'disabled' }"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
+
+      <!-- 分页 -->
+      <div class="pagination">
+        <el-pagination
+          :total="totalSchedules"
+          :background="true"
+          :page-size="rowsPerPage"
+          v-if="refreshPagination"
+          :current-page="currentPage"
+          layout="prev, pager, next, jumper"
+          @current-change="handlePageChange"
+        >
+        </el-pagination>
+      </div>
     </div>
 
     <!-- 编辑页面 -->
@@ -53,13 +73,19 @@ import ScheduleModify from './schedule'
 
 export default {
   components: {
-    ScheduleModify
+    ScheduleModify,
   },
+
   setup() {
     const schedules = ref([])
     const editScheduleId = ref(1)
     const loading = ref(false)
     const showEdit = ref(false)
+
+    const refreshPagination = ref(true) // 页数增加的时候，因为缓存的缘故，需要刷新Pagination组件
+    const totalSchedules = ref(0)
+    const rowsPerPage = ref(5)
+    const currentPage = ref(1)
 
     onMounted(() => {
       getAllSchedules()
@@ -67,14 +93,33 @@ export default {
 
     const getAllSchedules = async () => {
       try {
-        loading.value = true
-        schedules.value = await scheduleModel.getAllSchedules()
-        loading.value = false
+        schedules.value = await getScheduleByPage()
       } catch (error) {
         loading.value = false
         if (error.code === 10020) {
           schedules.value = []
         }
+      }
+    }
+
+    /* 翻页 */
+    const handlePageChange = async val => {
+      currentPage.value = val
+      await getScheduleByPage()
+    }
+
+    /* 获取管理员列表数据 */
+    const getScheduleByPage = async () => {
+      let res = {}
+      try {
+        loading.value = true
+        res = await scheduleModel.getScheduleGoupByPage(currentPage.value - 1, rowsPerPage.value)
+        loading.value = false
+        schedules.value = res.schedules
+        totalSchedules.value = res.totalSchedules
+      } catch (e) {
+        loading.value = false
+        console.error(e)
       }
     }
 
@@ -110,10 +155,16 @@ export default {
       handleEdit,
       editScheduleId,
       handleDelete,
+
+      refreshPagination,
+      totalSchedules,
+      currentPage,
+      rowsPerPage,
+      handlePageChange,
+      getScheduleByPage,
     }
   },
-  methods: {
-  }
+  methods: {},
 }
 </script>
 
@@ -142,8 +193,8 @@ export default {
   }
 
   .el-tag {
-    margin-left: 2px;
-    margin-bottom: 2px;
+    margin-left: 3px;
+    margin-bottom: 3px;
   }
 
   .tag-div {

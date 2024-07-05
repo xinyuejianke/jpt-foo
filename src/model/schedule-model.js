@@ -2,7 +2,6 @@
 import _axios, { get, put, _delete } from '@/lin/plugin/axios'
 
 class ScheduleModel {
-
   // 类中的方法可以代表一个用户行为
   async createSchedule(data) {
     return _axios({
@@ -24,8 +23,12 @@ class ScheduleModel {
     return await get(`v1/schedules/${date}`)
   }
 
+  async getScheduleGoupByPage(pageNumber, rowsPerPage) {
+    return await get('v1/schedules/results/group/by/page', { pageNumber, rowsPerPage })
+  }
+
   async getAllSchedules() {
-    return await get(`v1/schedules/`)
+    return await get('v1/schedules/')
   }
 
   async updateSchedule(scheduleId, info) {
