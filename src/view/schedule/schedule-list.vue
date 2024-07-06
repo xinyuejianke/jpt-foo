@@ -6,20 +6,24 @@
         <div class="title">排班列表</div>
 
         <!-- 员工ID筛选器：下拉框 -->
-        <el-dropdown :model="targetEmployee" @command="handleEmployeeFilter">
-          <el-button>
-            {{ targetEmployee.id ? `${targetEmployee.id} : ${targetEmployee.nickname}` : 'ID : 员工昵称' }}
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item v-model="employees" icon="el-icon-user-solid" v-for="(employee, index) in employees"
-                :key="index" :command="employee">
-                {{ employee.id }} : {{ employee.nickname }}
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+        <div>
+          <el-dropdown :model="targetEmployee" @command="handleEmployeeFilter">
+            <el-button>
+              {{ targetEmployee.id ? `${targetEmployee.id} : ${targetEmployee.nickname}` : 'ID : 员工昵称' }}
+              <i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item v-model="employees" icon="el-icon-user-solid" v-for="(employee, index) in employees"
+                  :key="index" :command="employee">
+                  {{ employee.id }} : {{ employee.nickname }}
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+
+          <el-button type="danger" @click="handleResetFilter()">重制筛选器</el-button>
+        </div>
       </div>
 
       <!-- 表格 -->
@@ -155,6 +159,12 @@ export default {
       getScheduleByPage()
     }
 
+    const handleResetFilter = () => {
+      targetEmployee.id = null
+      targetEmployee.nickname = null
+      getScheduleByPage()
+    }
+
     return {
       schedules,
       loading,
@@ -174,6 +184,7 @@ export default {
       targetEmployee,
       employees,
       handleEmployeeFilter,
+      handleResetFilter,
     }
   },
   methods: {},
