@@ -4,7 +4,24 @@
     <div class="container" v-if="!showEdit">
       <div class="header">
         <div class="title">排班列表</div>
+
+        <!-- 员工ID筛选器：下拉框 -->
+        <el-dropdown :model="targetEmployee" @command="handleEmployeeFilter">
+          <el-button>
+            {{ targetEmployee.id == 2 ? `${targetEmployee.id} : ${targetEmployee.nickname}` : 'ID : 员工昵称' }}
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item v-model="employees" icon="el-icon-user-solid" v-for="(employee, index) in employees"
+                :key="index" :command="employee">
+                {{ employee.id }} : {{ employee.nickname }}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
+
       <!-- 表格 -->
       <el-table :data="schedules" v-loading="loading">
         <el-table-column prop="id" label="ID" width="50"></el-table-column>
@@ -53,10 +70,11 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, reactive } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import scheduleModel from '../../model/schedule-model'
 import ScheduleModify from './schedule'
+import userModel from '../../lin/model/user'
 
 export default {
   components: {
@@ -74,6 +92,9 @@ export default {
     const rowsPerPage = ref(5)
     const currentPage = ref(1)
 
+    const employees = ref([])
+    const targetEmployee = reactive({ id: '', nickname: '' })
+
     onMounted(() => {
       getScheduleByPage()
     })
@@ -89,10 +110,12 @@ export default {
       let res = {}
       try {
         loading.value = true
-        res = await scheduleModel.getScheduleGoupByPage(currentPage.value - 1, rowsPerPage.value)
+        res = await scheduleModel.getScheduleGoupByPage(currentPage.value - 1, rowsPerPage.value, null, targetEmployee.id)
         loading.value = false
         schedules.value = res.schedules
+        employees.value = await userModel.getAllEmployees()
         totalSchedules.value = res.totalSchedules
+        console.log(targetEmployee.id)
       } catch (e) {
         loading.value = false
         if (error.code === 10020) {
@@ -125,6 +148,13 @@ export default {
       getScheduleByPage()
     }
 
+    const handleEmployeeFilter = employee => {
+      //set selected employee as target employee
+      targetEmployee.id = employee.id
+      targetEmployee.nickname = employee.nickname
+      getScheduleByPage()
+    }
+
     return {
       schedules,
       loading,
@@ -140,6 +170,10 @@ export default {
       rowsPerPage,
       handlePageChange,
       getScheduleByPage,
+
+      targetEmployee,
+      employees,
+      handleEmployeeFilter,
     }
   },
   methods: {},
