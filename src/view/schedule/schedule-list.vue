@@ -6,9 +6,9 @@
         <div class="title">排班列表</div>
 
         <!-- 员工ID筛选器：下拉框 -->
-        <el-dropdown :model="targetEmployee" @command="handleEmployeeFilter">
+        <el-dropdown v-model="targetEmployee" @command="handleEmployeeFilter">
           <el-button>
-            {{ targetEmployee.id == 2 ? `${targetEmployee.id} : ${targetEmployee.nickname}` : 'ID : 员工昵称' }}
+            {{ targetEmployee.id ? `${targetEmployee.id} : ${targetEmployee.nickname}` : 'ID : 员工昵称' }}
             <i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
           <template #dropdown>
