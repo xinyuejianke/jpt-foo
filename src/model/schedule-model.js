@@ -23,8 +23,8 @@ class ScheduleModel {
     return await get(`v1/schedules/${date}`)
   }
 
-  async getScheduleGoupByPage(pageNumber, rowsPerPage) {
-    return await get('v1/schedules/results/group/by/page', { pageNumber, rowsPerPage })
+  async getScheduleGoupByPage(pageNumber, rowsPerPage, date, userId) {
+    return await get('v1/schedules/results/group/by/page', { pageNumber, rowsPerPage, date, userId })
   }
 
   async getAllSchedules() {
