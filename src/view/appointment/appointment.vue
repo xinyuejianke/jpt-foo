@@ -31,7 +31,7 @@
               <el-input v-model="appointment.date_time" placeholder="请填写排班日期（格式：YYYY-MM-DD hh:mm e.g. 2023-01-31）"></el-input>
             </el-form-item>
             <el-form-item label="附言" prop="comment">
-              <el-input v-model="appointment.comment" placeholder="请填写附言（e.g. 发烧）"></el-input>
+              <el-input v-model="appointment.comment" clearable placeholder="请填写附言（e.g. 发烧）"></el-input>
             </el-form-item>
             <el-form-item class="submit">
               <el-button type="primary" @click="submitForm">保 存</el-button>
@@ -85,8 +85,6 @@ export default {
     }
 
     const submitForm = async formName => {
-      console.log('>>>')
-      console.log(appointment)
       form.value.validate(async valid => {
         if (valid) {
           let res = {}
@@ -142,7 +140,6 @@ function getRules() {
     member_id: [{ validator: checkInfo, trigger: 'blur', required: true }],
     employee_id: [{ validator: checkInfo, trigger: 'blur', required: true }],
     date_time: [{ validator: checkInfo, trigger: 'blur', required: true }],
-    comment: [{ validator: checkInfo, trigger: 'blur', required: true }],
   }
   return { rules }
 }
