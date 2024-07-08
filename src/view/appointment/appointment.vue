@@ -6,9 +6,24 @@
       <el-row>
         <el-col :lg="16" :md="20" :sm="24" :xs="24">
           <el-form :model="appointment" status-icon ref="form" label-width="100px" @submit.prevent :rules="rules">
-            <el-form-item label="工作人员ID" prop="employee_id">
-              <el-input v-model="appointment.employee_id" placeholder="请填写工作人员ID"></el-input>
+
+            <el-form-item label="工作人员ID" prop="user_id">
+              <el-dropdown @command="handleEmployeeId">
+                <el-button>
+                  {{ appointment.employee_id ? `${appointment.employee_id} : ${appointment.employee_nickname}`: 'ID : 员工昵称'}}
+                  <i class="el-icon-arrow-down el-icon--right"></i>
+                </el-button>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item v-model="appointment.employee_id" icon="el-icon-user-solid" 
+                    v-for="(employee, index) in employees" :key="index" :command="employee" >
+                      {{employee.id}} : {{ employee.nickname }}
+                    </el-dropdown-item>
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
             </el-form-item>
+
             <el-form-item label="顾客ID" prop="member_id">
               <el-input v-model="appointment.member_id" placeholder="请填写顾客ID"></el-input>
             </el-form-item>
@@ -33,6 +48,7 @@
 import { reactive, ref, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import appointmentModel from '../../model/appointment-model'
+import userModel from '../../lin/model/user'
 
 export default {
   props: {
@@ -45,11 +61,9 @@ export default {
   setup(props, context) {
     const form = ref(null)
     const loading = ref(false)
-    const appointment = reactive({ member_id: '', date_time: '', employee_id: '',  comment:'', advice:''})
-
-    const listAssign = (a, b) => Object.keys(a).forEach(key => {
-      a[key] = b[key] || a[key]
-    })
+    const employees = ref([])
+    const appointment = reactive({ member_id: '', date_time: '', employee_id: '', employee_nickname: '',  comment:'', advice:''})
+    
 
     /**
      * 表单规则验证
@@ -57,20 +71,17 @@ export default {
     const { rules } = getRules()
 
     onMounted(() => {
+      loadEmployees()
     })
-
-    const getAppointment = async () => {
-      loading.value = true
-      const res = await appointmentModel.getAppointment(props.editAppointmentId)
-      listAssign(appointment, res)
-      if (props.editAppointmentId) {
-      }
-      loading.value = false
-    }
 
     // 重置表单
     const resetForm = () => {
       form.value.resetFields()
+      loadEmployees()
+    }
+
+    const loadEmployees = async() => {
+      employees.value = await userModel.getAllEmployees()
     }
 
     const submitForm = async formName => {
@@ -90,6 +101,11 @@ export default {
         }
       })
     }
+    
+    const handleEmployeeId = employee => {
+      appointment.employee_id = employee.id
+      appointment.employee_nickname = employee.nickname
+    }
 
     const back = () => {
       context.emit('editClose')
@@ -102,6 +118,9 @@ export default {
       rules,
       resetForm,
       submitForm,
+      employees,
+      loadEmployees,
+      handleEmployeeId,
     }
   },
 }
