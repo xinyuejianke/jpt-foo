@@ -3,11 +3,14 @@
     <!-- 列表页面 -->
     <div class="container" v-if="!showEdit">
       <div class="header">
-        <div class="title">排班列表</div>
+        <div><p class="title">排班列表</p></div>
+        <div>
+
+        <!-- 日期筛选器 -->
+        <el-date-picker v-model="targetEmployee.date" type="date" placeholder="选择筛选日期" @change="getScheduleByPage"/>
 
         <!-- 员工ID筛选器：下拉框 -->
-        <div>
-          <el-dropdown :model="targetEmployee" @command="handleEmployeeFilter">
+          <el-dropdown v-model="targetEmployee" @command="handleEmployeeFilter">
             <el-button>
               {{ targetEmployee.id ? `${targetEmployee.id} : ${targetEmployee.nickname}` : 'ID : 员工昵称' }}
               <i class="el-icon-arrow-down el-icon--right"></i>
@@ -22,7 +25,7 @@
             </template>
           </el-dropdown>
 
-          <el-button type="danger" @click="handleResetFilter()">重制筛选器</el-button>
+          <el-button type="danger" @click="handleResetFilter">重制筛选器</el-button>
         </div>
       </div>
 
@@ -82,8 +85,8 @@ import userModel from '../../lin/model/user'
 
 export default {
   components: {
-    ScheduleModify,
-  },
+    ScheduleModify
+},
 
   setup() {
     const schedules = ref([])
@@ -97,7 +100,7 @@ export default {
     const currentPage = ref(1)
 
     const employees = ref([])
-    const targetEmployee = reactive({ id: '', nickname: '' })
+    const scheduleFilter = reactive({ id: '', nickname: '', date: ''})
 
     onMounted(() => {
       getScheduleByPage()
@@ -114,12 +117,16 @@ export default {
       let res = {}
       try {
         loading.value = true
-        res = await scheduleModel.getScheduleGoupByPage(currentPage.value - 1, rowsPerPage.value, null, targetEmployee.id)
+        res = await scheduleModel.getScheduleGoupByPage(
+          currentPage.value - 1, 
+          rowsPerPage.value, 
+          (scheduleFilter.date ?  scheduleFilter.date.toLocaleDateString("en-CA") : null), // filter date,
+          scheduleFilter.id //filter employee_id
+        )
         loading.value = false
         schedules.value = res.schedules
         employees.value = await userModel.getAllEmployees()
         totalSchedules.value = res.totalSchedules
-        console.log(targetEmployee.id)
       } catch (e) {
         loading.value = false
         if (error.code === 10020) {
@@ -154,14 +161,15 @@ export default {
 
     const handleEmployeeFilter = employee => {
       //set selected employee as target employee
-      targetEmployee.id = employee.id
-      targetEmployee.nickname = employee.nickname
+      scheduleFilter.id = employee.id
+      scheduleFilter.nickname = employee.nickname
       getScheduleByPage()
     }
 
     const handleResetFilter = () => {
-      targetEmployee.id = null
-      targetEmployee.nickname = null
+      scheduleFilter.id = null
+      scheduleFilter.nickname = null
+      scheduleFilter.date = null 
       getScheduleByPage()
     }
 
@@ -181,7 +189,7 @@ export default {
       handlePageChange,
       getScheduleByPage,
 
-      targetEmployee,
+      targetEmployee: scheduleFilter,
       employees,
       handleEmployeeFilter,
       handleResetFilter,
