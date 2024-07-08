@@ -28,7 +28,7 @@
             </el-form-item>
 
             <el-form-item label="日期" prop="date">
-              <el-input v-if="!editScheduleId" v-model="schedule.date" placeholder="请填写排班日期（格式：yyyy-mm-dd）"></el-input>
+              <el-date-picker v-if="!editScheduleId" v-model="schedule.date" type="date" placeholder="选择排班日期" value-format="YYYY-MM-DD"/>
               <!-- 编辑模式 -->
               <el-input v-else disabled v-model="schedule.date"></el-input>
             </el-form-item>
