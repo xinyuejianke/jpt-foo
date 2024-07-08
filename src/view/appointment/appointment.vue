@@ -28,7 +28,9 @@
               <el-input v-model="appointment.member_id" placeholder="请填写顾客ID"></el-input>
             </el-form-item>
             <el-form-item label="日期和时间" prop="date_time">
-              <el-input v-model="appointment.date_time" placeholder="请填写排班日期（格式：YYYY-MM-DD hh:mm e.g. 2023-01-31）"></el-input>
+              <!-- <el-input v-model="appointment.date_time" placeholder="请填写排班日期（格式：YYYY-MM-DD hh:mm e.g. 2023-01-31）"></el-input> -->
+              <el-date-picker v-model="appointment.date" type="date" placeholder="日期" value-format="YYYY-MM-DD"/>
+              <el-time-picker v-model="appointment.time" value-format="HH:mm" placeholder="时间" />
             </el-form-item>
             <el-form-item label="附言" prop="comment">
               <el-input v-model="appointment.comment" clearable placeholder="请填写附言（e.g. 发烧）"></el-input>
@@ -60,9 +62,17 @@ export default {
   },
   setup(props, context) {
     const form = ref(null)
-    const loading = ref(false)
     const employees = ref([])
-    const appointment = reactive({ member_id: '', date_time: '', employee_id: '', employee_nickname: '',  comment:'', advice:''})
+    const appointment = reactive({ 
+      member_id: '', 
+      date: '',
+      time: '',
+      date_time: '', 
+      employee_id: '', 
+      employee_nickname: '',  
+      comment:'', 
+      advice:''
+    })
     
 
     /**
@@ -88,6 +98,8 @@ export default {
       form.value.validate(async valid => {
         if (valid) {
           let res = {}
+          appointment.date_time = `${appointment.date} ${appointment.time}`
+          console.log(appointment)
           res = await appointmentModel.createAppointment(appointment)
           resetForm(formName)
           if (res.code < window.MAX_SUCCESS_CODE) {
@@ -139,7 +151,6 @@ function getRules() {
   const rules = {
     member_id: [{ validator: checkInfo, trigger: 'blur', required: true }],
     employee_id: [{ validator: checkInfo, trigger: 'blur', required: true }],
-    date_time: [{ validator: checkInfo, trigger: 'blur', required: true }],
   }
   return { rules }
 }
