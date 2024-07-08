@@ -28,12 +28,11 @@
               <el-input v-model="appointment.member_id" placeholder="请填写顾客ID"></el-input>
             </el-form-item>
             <el-form-item label="日期和时间" prop="date_time">
-              <!-- <el-input v-model="appointment.date_time" placeholder="请填写排班日期（格式：YYYY-MM-DD hh:mm e.g. 2023-01-31）"></el-input> -->
-              <el-date-picker v-model="appointment.date" type="date" placeholder="日期" value-format="YYYY-MM-DD"/>
-              <el-time-picker v-model="appointment.time" value-format="HH:mm" placeholder="时间" />
+              <el-date-picker v-model="appointment.date" type="date" placeholder="日期" value-format="YYYY-MM-DD" editable="false"/>
+              <el-time-picker v-model="appointment.time" value-format="HH:mm" placeholder="时间" editable="false"/>
             </el-form-item>
             <el-form-item label="附言" prop="comment">
-              <el-input v-model="appointment.comment" clearable placeholder="请填写附言（e.g. 发烧）"></el-input>
+              <el-input v-model="appointment.comment" clearable placeholder="选填附言（e.g. 发烧）"></el-input>
             </el-form-item>
             <el-form-item class="submit">
               <el-button type="primary" @click="submitForm">保 存</el-button>
@@ -151,6 +150,7 @@ function getRules() {
   const rules = {
     member_id: [{ validator: checkInfo, trigger: 'blur', required: true }],
     employee_id: [{ validator: checkInfo, trigger: 'blur', required: true }],
+    // date_time: [{ validator: checkInfo, trigger: 'blur', required: true }],
   }
   return { rules }
 }
