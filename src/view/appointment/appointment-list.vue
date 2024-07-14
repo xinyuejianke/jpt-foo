@@ -8,24 +8,24 @@
       <!-- 表格 -->
       <el-table :data="appointments" v-loading="loading">
         <el-table-column prop="id" label="ID" width="50"></el-table-column>
-        <el-table-column prop="employee.id" label="职员ID"></el-table-column>
-        <el-table-column prop="employee.nickname" label="职员昵称"></el-table-column>
-        <el-table-column prop="member.id" label="顾客ID"></el-table-column>
-        <el-table-column prop="member.nickname" label="顾客昵称"></el-table-column>
+        <el-table-column prop="userId" label="职员ID"></el-table-column>
+        <el-table-column prop="userNickname" label="职员昵称"></el-table-column>
+        <el-table-column prop="memberId" label="顾客ID"></el-table-column>
+        <el-table-column prop="memberNickname" label="顾客昵称"></el-table-column>
         <el-table-column prop="dateTime" width="110" label="日期">
-          <template #default="scope">{{scope.row.dateTime.split('T')[0]}}</template>
+          <template #default="scope">{{ scope.row.dateTime.split('T')[0] }}</template>
         </el-table-column>
         <el-table-column prop="dateTime" label="时间">
-          <template #default="scope">{{scope.row.dateTime.split('T')[1].substring(0,5)}}</template>
+          <template #default="scope">{{ scope.row.dateTime.split('T')[1].substring(0, 5) }}</template>
         </el-table-column>
         <el-table-column prop="comment" label="附言">
           <template #default="scope">
-            {{scope.row.comment === null || scope.row.comment.trim().length === 0? '暂无' : scope.row.comment}}
+            {{ scope.row.comment === null || scope.row.comment.trim().length === 0 ? '暂无' : scope.row.comment }}
           </template>
         </el-table-column>
         <el-table-column prop="advice" label="备注">
           <template #default="scope">
-            {{scope.row.advice === null || scope.row.advice.trim().length === 0? '暂无' : scope.row.advice}}
+            {{ scope.row.advice === null || scope.row.advice.trim().length === 0 ? '暂无' : scope.row.advice }}
           </template>
         </el-table-column>
 
@@ -37,6 +37,14 @@
           </template>
         </el-table-column>
       </el-table>
+
+      <!-- 分页 -->
+      <div class="pagination">
+        <el-pagination :total="totalAppointments" :background="true" :page-size="rowsPerPage" v-if="refreshPagination"
+          :current-page="currentPage" layout="prev, pager, next, jumper" @current-change="handlePageChange">
+        </el-pagination>
+      </div>
+
     </div>
 
   </div>
@@ -54,6 +62,12 @@ export default {
     const loading = ref(false)
     const showEdit = ref(false)
 
+    const totalAppointments = ref(0)
+    const rowsPerPage = ref(5)
+    const currentPage = ref(1)
+
+    const refreshPagination = ref(true) // 页数增加的时候，因为缓存的缘故，需要刷新Pagination组件
+
     onMounted(() => {
       getAllAppointments()
     })
@@ -61,7 +75,14 @@ export default {
     const getAllAppointments = async () => {
       try {
         loading.value = true
-        appointments.value = await appointmentModel.getAllAppointments()
+        // appointments.value = await appointmentModel.getAllAppointments()
+        const res = await appointmentModel.getAppointmentsGoupByPage(
+          currentPage.value - 1,
+          rowsPerPage.value
+        )
+
+        appointments.value = res.appointments
+        totalAppointments.value = res.totalAppointments
         loading.value = false
       } catch (error) {
         if (error.code === 10020) {
@@ -92,6 +113,12 @@ export default {
       showEdit.value = false
     }
 
+    /* 翻页 */
+    const handlePageChange = async val => {
+      currentPage.value = val
+      await getAllAppointments()
+    }
+
     return {
       appointments,
       loading,
@@ -100,6 +127,12 @@ export default {
       editClose,
       handleEdit,
       handleDelete,
+
+      totalAppointments,
+      currentPage,
+      rowsPerPage,
+      refreshPagination,
+      handlePageChange
     }
   },
   methods: {

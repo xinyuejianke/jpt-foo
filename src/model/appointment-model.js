@@ -16,6 +16,10 @@ class AppointmentModel {
     return await get(`v1/appointments/`)
   }
 
+  async getAppointmentsGoupByPage(pageNumber, rowsPerPage, dateTime, userId, memberId) {
+    return await get('v1/appointments/results/group/by/page', { pageNumber, rowsPerPage, dateTime, userId, memberId })
+  }
+
   async updateAppointment(appointmentId, info) {
     return await put(`v1/appointments/${appointmentId}`, info)
   }

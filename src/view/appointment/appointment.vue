@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="title" >新增排班</div>
+    <div class="title" >新增预约</div>
 
     <div class="wrap">
       <el-row>
