@@ -6,6 +6,10 @@
         <div class="title">预约列表</div>
 
         <div>
+          <!-- 日期筛选器 -->
+          <el-date-picker v-model="appointmentFilter.dateTime" type="date" placeholder="选择筛选日期"
+            @change="getAllAppointments" />
+
           <!-- 员工ID筛选器：下拉框 -->
           <el-dropdown v-model="targetEmployee" @command="handleEmployeeFilter">
             <el-button>
@@ -91,6 +95,7 @@ export default {
     const refreshPagination = ref(true) // 页数增加的时候，因为缓存的缘故，需要刷新Pagination组件
 
     const appointmentFilter = reactive({ userId: '', userNickname: '', memberId: '', dateTime: '' })
+    const targetEmployee = reactive({ userId: '', nickname: '' })
     const employees = ref([])
 
     onMounted(() => {
@@ -101,10 +106,15 @@ export default {
       try {
         loading.value = true
         employees.value = await userModel.getAllEmployees()
+
+        const formatedFilterDate = appointmentFilter.dateTime ?
+          appointmentFilter.dateTime.toLocaleDateString("en-CA") : null
+        console.log(formatedFilterDate)
+
         const res = await appointmentModel.getAppointmentsGoupByPage(
           currentPage.value - 1,
           rowsPerPage.value,
-          '',
+          formatedFilterDate,
           appointmentFilter.userId
         )
 
@@ -146,6 +156,8 @@ export default {
       //set selected employee as target employee
       appointmentFilter.userId = employee.id
       appointmentFilter.userNickname = employee.nickname
+      targetEmployee.id = appointmentFilter.userId
+      targetEmployee.nickname = appointmentFilter.userNickname
       getAllAppointments()
     }
 
@@ -154,6 +166,8 @@ export default {
       appointmentFilter.userNickname = null
       appointmentFilter.memberId = null
       appointmentFilter.dateTime = null
+      targetEmployee.id = null
+      targetEmployee.nickname = null
       getAllAppointments()
     }
 
@@ -171,8 +185,9 @@ export default {
       refreshPagination,
       handlePageChange,
 
+      getAllAppointments,
       appointmentFilter,
-      targetEmployee: appointmentFilter,
+      targetEmployee,
       employees,
       handleEmployeeFilter,
       handleResetFilter,
