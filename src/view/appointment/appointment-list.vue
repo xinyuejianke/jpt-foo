@@ -5,21 +5,25 @@
       <div class="header">
         <div class="title">预约列表</div>
 
-        <!-- 员工ID筛选器：下拉框 -->
-        <el-dropdown v-model="targetEmployee" @command="handleEmployeeFilter">
-          <el-button>
-            {{ targetEmployee.id ? `${targetEmployee.id} : ${targetEmployee.nickname}` : 'ID : 员工昵称' }}
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </el-button>
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item v-model="employees" icon="el-icon-user-solid" v-for="(employee, index) in employees"
-                :key="index" :command="employee">
-                {{ employee.id }} : {{ employee.nickname }}
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
+        <div>
+          <!-- 员工ID筛选器：下拉框 -->
+          <el-dropdown v-model="targetEmployee" @command="handleEmployeeFilter">
+            <el-button>
+              {{ targetEmployee.id ? `${targetEmployee.id} : ${targetEmployee.nickname}` : 'ID : 员工昵称' }}
+              <i class="el-icon-arrow-down el-icon--right"></i>
+            </el-button>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item v-model="employees" icon="el-icon-user-solid" v-for="(employee, index) in employees"
+                  :key="index" :command="employee">
+                  {{ employee.id }} : {{ employee.nickname }}
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+
+          <el-button type="danger" @click="handleResetFilter">重制筛选器</el-button>
+        </div>
       </div>
 
       <!-- 表格 -->
@@ -145,6 +149,14 @@ export default {
       getAllAppointments()
     }
 
+    const handleResetFilter = () => {
+      appointmentFilter.userId = null
+      appointmentFilter.userNickname = null
+      appointmentFilter.memberId = null
+      appointmentFilter.dateTime = null
+      getAllAppointments()
+    }
+
     return {
       appointments,
       loading,
@@ -163,6 +175,7 @@ export default {
       targetEmployee: appointmentFilter,
       employees,
       handleEmployeeFilter,
+      handleResetFilter,
     }
   },
   methods: {
