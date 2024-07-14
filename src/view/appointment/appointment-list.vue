@@ -4,7 +4,24 @@
     <div class="container" v-if="!showEdit">
       <div class="header">
         <div class="title">预约列表</div>
+
+        <!-- 员工ID筛选器：下拉框 -->
+        <el-dropdown v-model="targetEmployee" @command="handleEmployeeFilter">
+          <el-button>
+            {{ targetEmployee.id ? `${targetEmployee.id} : ${targetEmployee.nickname}` : 'ID : 员工昵称' }}
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item v-model="employees" icon="el-icon-user-solid" v-for="(employee, index) in employees"
+                :key="index" :command="employee">
+                {{ employee.id }} : {{ employee.nickname }}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </div>
+
       <!-- 表格 -->
       <el-table :data="appointments" v-loading="loading">
         <el-table-column prop="id" label="ID" width="50"></el-table-column>
@@ -51,9 +68,10 @@
 </template>
 
 <script>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, reactive } from 'vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import appointmentModel from '../../model/appointment-model'
+import userModel from '../../lin/model/user'
 
 export default {
   setup() {
@@ -68,6 +86,9 @@ export default {
 
     const refreshPagination = ref(true) // 页数增加的时候，因为缓存的缘故，需要刷新Pagination组件
 
+    const appointmentFilter = reactive({ userId: '', userNickname: '', memberId: '', dateTime: '' })
+    const employees = ref([])
+
     onMounted(() => {
       getAllAppointments()
     })
@@ -75,10 +96,12 @@ export default {
     const getAllAppointments = async () => {
       try {
         loading.value = true
-        // appointments.value = await appointmentModel.getAllAppointments()
+        employees.value = await userModel.getAllEmployees()
         const res = await appointmentModel.getAppointmentsGoupByPage(
           currentPage.value - 1,
-          rowsPerPage.value
+          rowsPerPage.value,
+          '',
+          appointmentFilter.userId
         )
 
         appointments.value = res.appointments
@@ -89,10 +112,6 @@ export default {
           appointments.value = []
         }
       }
-    }
-
-    const handleEdit = id => {
-      showEdit.value = true
     }
 
     const handleDelete = id => {
@@ -119,20 +138,31 @@ export default {
       await getAllAppointments()
     }
 
+    const handleEmployeeFilter = employee => {
+      //set selected employee as target employee
+      appointmentFilter.userId = employee.id
+      appointmentFilter.userNickname = employee.nickname
+      getAllAppointments()
+    }
+
     return {
       appointments,
       loading,
       showEdit,
       editAppointmentId,
       editClose,
-      handleEdit,
       handleDelete,
 
       totalAppointments,
       currentPage,
       rowsPerPage,
       refreshPagination,
-      handlePageChange
+      handlePageChange,
+
+      appointmentFilter,
+      targetEmployee: appointmentFilter,
+      employees,
+      handleEmployeeFilter,
     }
   },
   methods: {
